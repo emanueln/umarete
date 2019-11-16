@@ -1,5 +1,3 @@
-use std::convert::TryInto;
-
 fn main() {
     // Structs
     struct Genes {
@@ -30,18 +28,36 @@ fn main() {
         }
     }
 
-    fn build_human(id: usize, name: String, female: bool, genes: Genes) -> Human {
+    fn build_human(id: usize, name: String, age: u16, female: bool, genes: Genes) -> Human {
         Human {
             id,
             name,
-            age: 0,
+            age,
             female,
             alive: true,
             genes
         }
     }
 
-    // Food acquisition
+    fn build_biome(id: usize, name: String, capacity: u8) -> Biome {
+        Biome {
+            id,
+            name,
+            capacity
+        }
+    }
+    // Food
+    fn food_consumption(humans: &Vec<Human>) -> f32 {
+        let mut consumed: f32 = 0.0;
+        for human in humans {
+            if human.age < 180 {
+                consumed += 0.1 + human.age as f32 * 0.05;
+            } else {
+                consumed += 1.0;
+            }
+        }
+        return consumed
+    }
     fn look_for_food(mut human: Human, difficulty: f32) -> Human {
         if human.genes.food_ability / difficulty < 20.0 {
             human.alive = false
@@ -53,18 +69,14 @@ fn main() {
         return human
     }
 
-    // Seeking a partner
+    // Sex
     fn seek_partner() {}
 
     // Creating the world
-    let tundra = Biome {
-        name: "Tundray".to_string(),
-        capacity: 30,
-        id: 0
-    };
+    let tundra = build_biome(0, "Tundra".to_string(), 24);
     let mut humans: Vec<Human> = Vec::new();
-    humans.push(build_human(humans.len(), "Alice".to_string(), true, build_genes(50.0, 50.0)));
-    humans.push(build_human(humans.len(), "Bob".to_string(), true, build_genes(50.0, 50.0)));
+    humans.push(build_human(humans.len(), "Alice".to_string(), 200, true, build_genes(50.0, 50.0)));
+    humans.push(build_human(humans.len(), "Bob".to_string(), 200, true, build_genes(50.0, 50.0)));
 
     // Passing time
     fn pass_time(humans: Vec<Human>, difficulty: f32) -> Vec<Human>{
@@ -94,8 +106,7 @@ fn main() {
     }
 
     // Running the simulation
-    let difficulty: f32 = humans.len() as f32 / tundra.capacity as f32;
-    humans = pass_time(humans, difficulty);
+    let food_difficulty = food_consumption(&humans) / tundra.capacity as f32;
+    humans = pass_time(humans, food_difficulty);
     log_update(humans);
-
 }
