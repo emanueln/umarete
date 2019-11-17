@@ -1,11 +1,17 @@
+use rand::Rng;
+
 fn main() {
+    // RNG
+    fn random_float_between(a: f32, b: f32) -> f32 {
+        return rand::thread_rng().gen_range(a, b)
+    }
     // Structs
     struct Genes {
-        fertility: f32,
-        food_ability: f32
+        food_ability: f32,
+        attractiveness: f32
     }
 
-    struct Human {
+    struct Sim {
         id: usize,
         partner: usize,
         name: String,
@@ -16,21 +22,19 @@ fn main() {
     }
 
     struct Biome {
-        id: usize,
-        name: String,
         capacity: u8
     }
 
     // Build functions
-    fn build_genes(fertility: f32, food_ability: f32) -> Genes {
+    fn build_genes(food_ability: f32, attractiveness: f32) -> Genes {
         Genes {
-            fertility,
-            food_ability
+            food_ability,
+            attractiveness
         }
     }
 
-    fn build_human(id: usize, name: String, age: u16, female: bool, genes: Genes) -> Human {
-        Human {
+    fn build_human(id: usize, name: String, age: u16, female: bool, genes: Genes) -> Sim {
+        Sim {
             id: id + 1,
             partner: 0,
             name,
@@ -41,15 +45,14 @@ fn main() {
         }
     }
 
-    fn build_biome(id: usize, name: String, capacity: u8) -> Biome {
+    fn build_biome(capacity: u8) -> Biome {
         Biome {
-            id,
-            name,
             capacity
         }
     }
+
     // Food
-    fn food_consumption(humans: &Vec<Human>) -> f32 {
+    fn food_consumption(humans: &Vec<Sim>) -> f32 {
         let mut consumed: f32 = 0.0;
         for human in humans {
             if human.age < 180 {
@@ -61,25 +64,47 @@ fn main() {
         return consumed
     }
 
-    fn look_for_food(mut human: Human, difficulty: f32) -> Human {
+    fn died_of_starvation(human: &Sim, difficulty: f32) -> bool {
+        let mut dead = false;
         if human.genes.food_ability / difficulty < 20.0 {
-            human.alive = false
+            dead = true;
         } else if human.genes.food_ability / difficulty < 40.0 {
-            if rand::random() {
-                human.alive = false
+            if random_float_between(0.0, 3.0) >= 2.0 {
+                dead = true;
             }
         }
-        return human
+        return dead
+    }
+
+    // Death
+    fn kill(mut human: Sim) -> Sim{
+        human.alive = false;
+        human.partner = 0;
+        return human;
+    }
+
+    // Mating
+    fn consider_for_mating(man: &Sim, woman: &Sim) -> bool {
+        let desire = random_float_between(1.0, 5.0);
+        if woman.partner == 0 &&
+        woman.genes.attractiveness >= man.genes.attractiveness / desire &&
+        man.partner == 0 &&
+        rand::random(){
+            return true
+        } else {
+            return false
+        }
     }
 
     // Passing time
-    fn food_stage(humans: Vec<Human>, difficulty: f32) -> Vec<Human>{
-        let mut new_humans: Vec<Human> = Vec::new();
+    fn food_stage(humans: Vec<Sim>, difficulty: f32) -> Vec<Sim>{
+        let mut new_humans: Vec<Sim> = Vec::new();
         for human in humans {
             let mut new_human = human;
             if new_human.alive {
-                new_human = look_for_food(new_human, difficulty);
-                if new_human.alive {
+                if died_of_starvation(&new_human, difficulty){
+                    new_human = kill(new_human);
+                } else {
                     new_human.age += 1;
                 }
             }
@@ -88,11 +113,11 @@ fn main() {
         return new_humans
     }
 
-    fn mating_stage(humans: Vec<Human>) -> Vec<Human> {
-        let mut other_humans: Vec<Human> = Vec::new();
-        let mut single_men: Vec<Human> = Vec::new();
-        let mut single_women: Vec<Human> = Vec::new();
-        let mut return_humans: Vec<Human> = Vec::new();
+    fn mating_stage(humans: Vec<Sim>) -> Vec<Sim> {
+        let mut other_humans: Vec<Sim> = Vec::new();
+        let mut single_men: Vec<Sim> = Vec::new();
+        let mut single_women: Vec<Sim> = Vec::new();
+        let mut return_humans: Vec<Sim> = Vec::new();
         for human in humans {
             if human.alive && human.partner == 0 && human.age >= 180 {
                 if human.female {
@@ -105,8 +130,10 @@ fn main() {
             }
         }
         for mut man in single_men {
+            let mut tried = false;
             for mut woman in &mut single_women {
-                if woman.partner == 0 && rand::random() && man.partner == 0{
+                if !tried && consider_for_mating(&man, woman){
+                    tried = true;
                     woman.partner = man.id;
                     man.partner = woman.id;
                 }
@@ -118,8 +145,15 @@ fn main() {
         return return_humans;
     }
 
+    fn spend_a_month(mut humans: Vec<Sim>, biome: &Biome) -> Vec<Sim> {
+        let food_difficulty = food_consumption(&humans) / biome.capacity as f32;
+        humans = food_stage(humans, food_difficulty);
+        humans = mating_stage(humans);
+        return humans
+    }
+
     // Logging
-    fn log_update(humans: &Vec<Human>) {
+    fn log_update(humans: &Vec<Sim>) {
         for human in humans {
             if human.alive {
                 println!("{} is alive!", human.name);
@@ -135,18 +169,20 @@ fn main() {
         }
     }
     // Creating the world
-    let tundra = build_biome(0, "Tundra".to_string(), 24);
-    let mut humans: Vec<Human> = Vec::new();
-    humans.push(build_human(humans.len(), "Alice".to_string(), 200, true, build_genes(50.0, 50.0)));
-    humans.push(build_human(humans.len(), "Bob".to_string(), 200, false, build_genes(50.0, 50.0)));
-    humans.push(build_human(humans.len(), "Connor".to_string(), 200, false, build_genes(50.0, 50.0)));
-    humans.push(build_human(humans.len(), "David".to_string(), 200, false, build_genes(50.0, 50.0)));
-    humans.push(build_human(humans.len(), "Emily".to_string(), 200, true, build_genes(50.0, 50.0)));
-    humans.push(build_human(humans.len(), "Felicity".to_string(), 200, true, build_genes(50.0, 50.0)));
+    let tundra = build_biome(6);
+    let mut humans: Vec<Sim> = Vec::new();
+    humans.push(build_human(humans.len(), "Alice".to_string(), 200, true, build_genes(30.0, 90.0)));
+    humans.push(build_human(humans.len(), "Bob".to_string(), 200, false, build_genes(40.0, 50.0)));
+    humans.push(build_human(humans.len(), "Connor".to_string(), 200, false, build_genes(30.0, 30.0)));
+    humans.push(build_human(humans.len(), "David".to_string(), 200, false, build_genes(60.0, 50.0)));
+    humans.push(build_human(humans.len(), "Emily".to_string(), 200, true, build_genes(70.0, 10.0)));
+    humans.push(build_human(humans.len(), "Felicity".to_string(), 200, true, build_genes(80.0, 60.0)));
 
     // Running the simulation
-    let food_difficulty = food_consumption(&humans) / tundra.capacity as f32;
-    humans = food_stage(humans, food_difficulty);
-    humans = mating_stage(humans);
+    humans = spend_a_month(humans, &tundra);
+    humans = spend_a_month(humans, &tundra);
+    humans = spend_a_month(humans, &tundra);
+    humans = spend_a_month(humans, &tundra);
+    humans = spend_a_month(humans, &tundra);
     log_update(&humans);
 }
