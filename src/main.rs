@@ -55,16 +55,18 @@ fn main() {
     fn food_consumption(humans: &Vec<Sim>) -> f32 {
         let mut consumed: f32 = 0.0;
         for human in humans {
-            if human.age < 180 {
-                consumed += 0.1 + human.age as f32 * 0.05;
-            } else {
-                consumed += 1.0;
+            if human.alive {
+                if human.age < 180 {
+                    consumed += 0.1 + human.age as f32 * 0.05;
+                } else {
+                    consumed += 1.0;
+                }
             }
         }
         return consumed
     }
 
-    fn died_of_starvation(human: &Sim, difficulty: f32) -> bool {
+    fn could_not_find_food(human: &Sim, difficulty: f32) -> bool {
         let mut dead = false;
         if human.genes.food_ability / difficulty < 20.0 {
             dead = true;
@@ -99,16 +101,22 @@ fn main() {
     // Passing time
     fn food_stage(humans: Vec<Sim>, difficulty: f32) -> Vec<Sim>{
         let mut new_humans: Vec<Sim> = Vec::new();
-        for human in humans {
-            let mut new_human = human;
-            if new_human.alive {
-                if died_of_starvation(&new_human, difficulty){
-                    new_human = kill(new_human);
+        for mut human in humans {
+            if human.alive {
+                let mut survived = true;
+                if human.age >= 180 {
+                    if could_not_find_food(&human, difficulty){
+                        survived = false;
+                    }
                 } else {
-                    new_human.age += 1;
+                    // logic for children's survival here
+                    survived = true;
+                }
+                if !survived {
+                    human = kill(human);
                 }
             }
-            new_humans.push(new_human);
+            new_humans.push(human);
         }
         return new_humans
     }
@@ -169,7 +177,7 @@ fn main() {
         }
     }
     // Creating the world
-    let tundra = build_biome(6);
+    let tundra = build_biome(24);
     let mut humans: Vec<Sim> = Vec::new();
     humans.push(build_human(humans.len(), "Alice".to_string(), 200, true, build_genes(30.0, 90.0)));
     humans.push(build_human(humans.len(), "Bob".to_string(), 200, false, build_genes(40.0, 50.0)));
@@ -177,6 +185,12 @@ fn main() {
     humans.push(build_human(humans.len(), "David".to_string(), 200, false, build_genes(60.0, 50.0)));
     humans.push(build_human(humans.len(), "Emily".to_string(), 200, true, build_genes(70.0, 10.0)));
     humans.push(build_human(humans.len(), "Felicity".to_string(), 200, true, build_genes(80.0, 60.0)));
+    humans.push(build_human(humans.len(), "George".to_string(), 200, false, build_genes(30.0, 90.0)));
+    humans.push(build_human(humans.len(), "Harry".to_string(), 200, false, build_genes(40.0, 50.0)));
+    humans.push(build_human(humans.len(), "Isabelle".to_string(), 200, false, build_genes(30.0, 30.0)));
+    humans.push(build_human(humans.len(), "Jessica".to_string(), 200, false, build_genes(60.0, 50.0)));
+    humans.push(build_human(humans.len(), "Kelly".to_string(), 200, true, build_genes(70.0, 10.0)));
+    humans.push(build_human(humans.len(), "Larry".to_string(), 200, false, build_genes(80.0, 60.0)));
 
     // Running the simulation
     humans = spend_a_month(humans, &tundra);
