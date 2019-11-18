@@ -118,7 +118,7 @@ def mating_stage(sims):
     new_sims = new_sims + single_women
     return new_sims
 
-# Handling death
+# Death and aging
 
 def handle_deaths(sims):
     return_sims = []
@@ -133,6 +133,13 @@ def handle_deaths(sims):
         return_sims.append(sim)
     return return_sims   
 
+def age_sims(sims):
+    return_sims = []
+    for sim in sims:
+        if sim.alive:
+            sim.age += 1
+        return_sims.append(sim)
+    return return_sims
 # Spend time
 
 def spend_a_month(sims, biome):
@@ -140,15 +147,17 @@ def spend_a_month(sims, biome):
     sims = food_stage(sims, food_difficulty)
     sims = mating_stage(sims)
     sims = handle_deaths(sims)
+    sims = age_sims(sims)
+    
     return sims
     
 def spend_a_year(sims, biome, date):
     for _ in range(12):
-        print("Month %s of Year %s" % (date[0] + 1, date[1] + 1))
         print("------------------------------")
+        print("Month %s of Year %s" % (date % 12 + 1, date // 12 + 1))
         sims = spend_a_month(sims, biome) 
-        date[0] += 1
-    
+        date += 1
+        print("------------------------------")
     return sims
     
 # Logging
@@ -168,7 +177,7 @@ def log_status(sims):
             print("%s is dead." % sim.name)
 
 # Creating the world
-date = [0, 0]
+date = 0
 tundra = Biome(capacity=12)
 sims = []
 sims.append(Sim(id = len(sims), name= "Alice", genes=Genes(10, 30, True, 50), age=180))
@@ -185,9 +194,9 @@ sims.append(Sim(id = len(sims), name= "Kelly", genes=Genes(70, 90, True, 50), ag
 sims.append(Sim(id = len(sims), name= "Larry", genes=Genes(60, 100, False, 40), age=180))
 
 sims = spend_a_year(sims, tundra, date)
-date = [0, date[1]+1]
+date += 12
 sims = spend_a_year(sims, tundra, date)
-date = [0, date[1]+1]
+date += 12
 sims = spend_a_year(sims, tundra, date)
-date = [0, date[1]+1]
+date += 12
 log_status(sims)
