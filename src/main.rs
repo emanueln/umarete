@@ -33,7 +33,7 @@ fn main() {
         }
     }
 
-    fn build_human(id: usize, name: String, age: u16, female: bool, genes: Genes) -> Sim {
+    fn build_sim(id: usize, name: String, age: u16, female: bool, genes: Genes) -> Sim {
         Sim {
             id: id + 1,
             partner: 0,
@@ -52,12 +52,12 @@ fn main() {
     }
 
     // Food
-    fn food_consumption(humans: &Vec<Sim>) -> f32 {
+    fn food_consumption(sim: &Vec<Sim>) -> f32 {
         let mut consumed: f32 = 0.0;
-        for human in humans {
-            if human.alive {
-                if human.age < 180 {
-                    consumed += 0.1 + human.age as f32 * 0.05;
+        for sim in sim {
+            if sim.alive {
+                if sim.age < 180 {
+                    consumed += 0.1 + sim.age as f32 * 0.05;
                 } else {
                     consumed += 1.0;
                 }
@@ -66,11 +66,11 @@ fn main() {
         return consumed
     }
 
-    fn could_not_find_food(human: &Sim, difficulty: f32) -> bool {
+    fn could_not_find_food(sim: &Sim, difficulty: f32) -> bool {
         let mut dead = false;
-        if human.genes.food_ability / difficulty < 20.0 {
+        if sim.genes.food_ability / difficulty < 20.0 {
             dead = true;
-        } else if human.genes.food_ability / difficulty < 40.0 {
+        } else if sim.genes.food_ability / difficulty < 40.0 {
             if random_float_between(0.0, 3.0) >= 2.0 {
                 dead = true;
             }
@@ -79,10 +79,10 @@ fn main() {
     }
 
     // Death
-    fn kill(mut human: Sim) -> Sim{
-        human.alive = false;
-        human.partner = 0;
-        return human;
+    fn kill(mut sim: Sim) -> Sim{
+        sim.alive = false;
+        sim.partner = 0;
+        return sim;
     }
 
     // Mating
@@ -99,13 +99,13 @@ fn main() {
     }
 
     // Passing time
-    fn food_stage(humans: Vec<Sim>, difficulty: f32) -> Vec<Sim>{
-        let mut new_humans: Vec<Sim> = Vec::new();
-        for mut human in humans {
-            if human.alive {
+    fn food_stage(sims: Vec<Sim>, difficulty: f32) -> Vec<Sim>{
+        let mut new_sims: Vec<Sim> = Vec::new();
+        for mut sim in sims {
+            if sim.alive {
                 let mut survived = true;
-                if human.age >= 180 {
-                    if could_not_find_food(&human, difficulty){
+                if sim.age >= 180 {
+                    if could_not_find_food(&sim, difficulty){
                         survived = false;
                     }
                 } else {
@@ -113,28 +113,28 @@ fn main() {
                     survived = true;
                 }
                 if !survived {
-                    human = kill(human);
+                    sim = kill(sim);
                 }
             }
-            new_humans.push(human);
+            new_sims.push(sim);
         }
-        return new_humans
+        return new_sims
     }
 
-    fn mating_stage(humans: Vec<Sim>) -> Vec<Sim> {
-        let mut other_humans: Vec<Sim> = Vec::new();
+    fn mating_stage(sims: Vec<Sim>) -> Vec<Sim> {
+        let mut other_sims: Vec<Sim> = Vec::new();
         let mut single_men: Vec<Sim> = Vec::new();
         let mut single_women: Vec<Sim> = Vec::new();
-        let mut return_humans: Vec<Sim> = Vec::new();
-        for human in humans {
-            if human.alive && human.partner == 0 && human.age >= 180 {
-                if human.female {
-                    single_women.push(human);
+        let mut return_sims: Vec<Sim> = Vec::new();
+        for sim in sims {
+            if sim.alive && sim.partner == 0 && sim.age >= 180 {
+                if sim.female {
+                    single_women.push(sim);
                 } else {
-                    single_men.push(human);
+                    single_men.push(sim);
                 }
             } else {
-                other_humans.push(human);
+                other_sims.push(sim);
             }
         }
         for mut man in single_men {
@@ -146,57 +146,57 @@ fn main() {
                     man.partner = woman.id;
                 }
             }
-            return_humans.push(man);
+            return_sims.push(man);
         }
-        return_humans.extend(single_women);
-        return_humans.extend(other_humans);
-        return return_humans;
+        return_sims.extend(single_women);
+        return_sims.extend(other_sims);
+        return return_sims;
     }
 
-    fn spend_a_month(mut humans: Vec<Sim>, biome: &Biome) -> Vec<Sim> {
-        let food_difficulty = food_consumption(&humans) / biome.capacity as f32;
-        humans = food_stage(humans, food_difficulty);
-        humans = mating_stage(humans);
-        return humans
+    fn spend_a_month(mut sims: Vec<Sim>, biome: &Biome) -> Vec<Sim> {
+        let food_difficulty = food_consumption(&sims) / biome.capacity as f32;
+        sims = food_stage(sims, food_difficulty);
+        sims = mating_stage(sims);
+        return sims
     }
 
     // Logging
-    fn log_update(humans: &Vec<Sim>) {
-        for human in humans {
-            if human.alive {
-                println!("{} is alive!", human.name);
-                if let Some(partner) = humans.into_iter().find(|s| s.id == human.partner) {
+    fn log_update(sims: &Vec<Sim>) {
+        for sim in sims {
+            if sim.alive {
+                println!("{} is alive!", sim.name);
+                if let Some(partner) = sims.into_iter().find(|s| s.id == sim.partner) {
                    println!("Their partner is {}", partner.name);
                } else {
                    println!("So lonely...");
                }
             } else {
-                println!("{} is dead!", human.name)
+                println!("{} is dead!", sim.name)
             }
             println!("-------------------------------");
         }
     }
     // Creating the world
-    let tundra = build_biome(24);
-    let mut humans: Vec<Sim> = Vec::new();
-    humans.push(build_human(humans.len(), "Alice".to_string(), 200, true, build_genes(30.0, 90.0)));
-    humans.push(build_human(humans.len(), "Bob".to_string(), 200, false, build_genes(40.0, 50.0)));
-    humans.push(build_human(humans.len(), "Connor".to_string(), 200, false, build_genes(30.0, 30.0)));
-    humans.push(build_human(humans.len(), "David".to_string(), 200, false, build_genes(60.0, 50.0)));
-    humans.push(build_human(humans.len(), "Emily".to_string(), 200, true, build_genes(70.0, 10.0)));
-    humans.push(build_human(humans.len(), "Felicity".to_string(), 200, true, build_genes(80.0, 60.0)));
-    humans.push(build_human(humans.len(), "George".to_string(), 200, false, build_genes(30.0, 90.0)));
-    humans.push(build_human(humans.len(), "Harry".to_string(), 200, false, build_genes(40.0, 50.0)));
-    humans.push(build_human(humans.len(), "Isabelle".to_string(), 200, false, build_genes(30.0, 30.0)));
-    humans.push(build_human(humans.len(), "Jessica".to_string(), 200, false, build_genes(60.0, 50.0)));
-    humans.push(build_human(humans.len(), "Kelly".to_string(), 200, true, build_genes(70.0, 10.0)));
-    humans.push(build_human(humans.len(), "Larry".to_string(), 200, false, build_genes(80.0, 60.0)));
+    let tundra = build_biome(12);
+    let mut sims: Vec<Sim> = Vec::new();
+    sims.push(build_sim(sims.len(), "Alice".to_string(), 200, true, build_genes(30.0, 90.0)));
+    sims.push(build_sim(sims.len(), "Bobby".to_string(), 200, false, build_genes(100.0, 5.0)));
+    sims.push(build_sim(sims.len(), "Connor".to_string(), 200, false, build_genes(30.0, 30.0)));
+    sims.push(build_sim(sims.len(), "David".to_string(), 200, false, build_genes(60.0, 50.0)));
+    sims.push(build_sim(sims.len(), "Emily".to_string(), 200, true, build_genes(70.0, 10.0)));
+    sims.push(build_sim(sims.len(), "Felicity".to_string(), 200, true, build_genes(80.0, 60.0)));
+    sims.push(build_sim(sims.len(), "George".to_string(), 200, false, build_genes(30.0, 90.0)));
+    sims.push(build_sim(sims.len(), "Harry".to_string(), 200, false, build_genes(40.0, 50.0)));
+    sims.push(build_sim(sims.len(), "Isabelle".to_string(), 200, false, build_genes(30.0, 30.0)));
+    sims.push(build_sim(sims.len(), "Jessica".to_string(), 200, false, build_genes(60.0, 50.0)));
+    sims.push(build_sim(sims.len(), "Kelly".to_string(), 200, true, build_genes(70.0, 10.0)));
+    sims.push(build_sim(sims.len(), "Larry".to_string(), 200, false, build_genes(80.0, 60.0)));
 
     // Running the simulation
-    humans = spend_a_month(humans, &tundra);
-    humans = spend_a_month(humans, &tundra);
-    humans = spend_a_month(humans, &tundra);
-    humans = spend_a_month(humans, &tundra);
-    humans = spend_a_month(humans, &tundra);
-    log_update(&humans);
+    sims = spend_a_month(sims, &tundra);
+    sims = spend_a_month(sims, &tundra);
+    sims = spend_a_month(sims, &tundra);
+    sims = spend_a_month(sims, &tundra);
+    sims = spend_a_month(sims, &tundra);
+    log_update(&sims);
 }
