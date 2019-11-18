@@ -35,7 +35,7 @@ def total_food_desired(sims):
     return total_food
 
 def individual_food_desired(sim):
-    if sim.age < 180:
+    if sim.age < 201:
         food_desired = 0.1 + sim.age * 0.05
     else:
         food_desired = 1.0
@@ -53,7 +53,7 @@ def starved_to_death(sim, difficulty):
     return dead
     
 def get_food(sim, difficulty):
-    if sim.age >= 180:
+    if sim.age >= 201:
         dead = starved_to_death(sim, difficulty)
     else:
         # children method for getting food here
@@ -106,7 +106,7 @@ def man_looks_for_mate(man, women):
 
 def mating_stage(sims):
     new_sims = []
-    singles = list(filter(lambda x: (x.alive and x.partner_id == 0 and x.age >= 180 and not x.grieving), sims))
+    singles = list(filter(lambda x: (x.alive and x.partner_id == 0 and x.age >= 201 and not x.grieving), sims))
     single_women = list(filter(lambda x: x.genes.female, singles))
     single_men = list(filter(lambda x: not x.genes.female, singles))
     for sim in sims:
@@ -180,18 +180,18 @@ def log_status(sims):
 date = 0
 tundra = Biome(capacity=12)
 sims = []
-sims.append(Sim(id = len(sims), name= "Alice", genes=Genes(10, 30, True, 50), age=180))
-sims.append(Sim(id = len(sims), name= "Bobby", genes=Genes(20, 20, False, 60), age=180))
-sims.append(Sim(id = len(sims), name= "Connor", genes=Genes(30, 10, False, 70), age=180))
-sims.append(Sim(id = len(sims), name= "David", genes=Genes(60, 20, False, 80), age=180))
-sims.append(Sim(id = len(sims), name= "Emily", genes=Genes(50, 30, True, 90), age=180))
-sims.append(Sim(id = len(sims), name= "Felicity", genes=Genes(40, 40, True, 100), age=180))
-sims.append(Sim(id = len(sims), name= "George", genes=Genes(70, 50, False, 90), age=180))
-sims.append(Sim(id = len(sims), name= "Harry", genes=Genes(80, 60, False, 80), age=180))
-sims.append(Sim(id = len(sims), name= "Isabelle", genes=Genes(90, 70, True, 70), age=180))
-sims.append(Sim(id = len(sims), name= "Jessica", genes=Genes(80, 80, True, 60), age=180))
-sims.append(Sim(id = len(sims), name= "Kelly", genes=Genes(70, 90, True, 50), age=180))
-sims.append(Sim(id = len(sims), name= "Larry", genes=Genes(60, 100, False, 40), age=180))
+sims.append(Sim(id = len(sims), name= "Alice", genes=Genes(10, 30, True, 50), age=201))
+sims.append(Sim(id = len(sims), name= "Bobby", genes=Genes(20, 20, False, 60), age=201))
+sims.append(Sim(id = len(sims), name= "Connor", genes=Genes(30, 10, False, 70), age=201))
+sims.append(Sim(id = len(sims), name= "David", genes=Genes(60, 20, False, 80), age=201))
+sims.append(Sim(id = len(sims), name= "Emily", genes=Genes(50, 30, True, 90), age=201))
+sims.append(Sim(id = len(sims), name= "Felicity", genes=Genes(40, 40, True, 100), age=201))
+sims.append(Sim(id = len(sims), name= "George", genes=Genes(70, 50, False, 90), age=201))
+sims.append(Sim(id = len(sims), name= "Harry", genes=Genes(80, 60, False, 80), age=201))
+sims.append(Sim(id = len(sims), name= "Isabelle", genes=Genes(90, 70, True, 70), age=201))
+sims.append(Sim(id = len(sims), name= "Jessica", genes=Genes(80, 80, True, 60), age=201))
+sims.append(Sim(id = len(sims), name= "Kelly", genes=Genes(70, 90, True, 50), age=201))
+sims.append(Sim(id = len(sims), name= "Larry", genes=Genes(60, 100, False, 40), age=201))
 
 sims = spend_a_year(sims, tundra, date)
 date += 12
