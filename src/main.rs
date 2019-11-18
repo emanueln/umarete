@@ -80,24 +80,34 @@ fn main() {
 
     // Death
     fn kill(mut sim: Sim) -> Sim{
+        println!("{} tragically died.", sim.name);
         sim.alive = false;
         sim.partner = 0;
         return sim;
     }
-
+    
     // Mating
     fn consider_for_mating(man: &Sim, woman: &Sim) -> bool {
-        let desire = random_float_between(1.0, 5.0);
+        let desire = random_float_between(0.0, 10.0);
         if woman.partner == 0 &&
-        woman.genes.attractiveness >= man.genes.attractiveness / desire &&
-        man.partner == 0 &&
-        rand::random(){
+        woman.genes.attractiveness >= man.genes.attractiveness - desire * 5.0 {
             return true
         } else {
             return false
         }
     }
-
+    
+    fn attempt_to_seduce(man: &Sim, woman: &Sim) -> bool {
+        println!("{} attempts to seduce {}.", man.name, woman.name);
+        let loneliness = random_float_between(0.0, 10.0);
+        if man.genes.attractiveness >= woman.genes.attractiveness - loneliness * 5.0 {
+            println!("She accepts! They are now a couple.");
+            return true
+        } else {
+            println!("She turns him away. Better luck next time");
+            return false
+        }
+    }
     // Passing time
     fn food_stage(sims: Vec<Sim>, difficulty: f32) -> Vec<Sim>{
         let mut new_sims: Vec<Sim> = Vec::new();
@@ -142,8 +152,10 @@ fn main() {
             for mut woman in &mut single_women {
                 if !tried && consider_for_mating(&man, woman){
                     tried = true;
-                    woman.partner = man.id;
-                    man.partner = woman.id;
+                    if attempt_to_seduce(&man, &woman){
+                        woman.partner = man.id;
+                        man.partner = woman.id;
+                    }
                 }
             }
             return_sims.push(man);
@@ -161,8 +173,9 @@ fn main() {
     }
 
     // Logging
-    fn log_update(sims: &Vec<Sim>) {
+    fn log_status(sims: &Vec<Sim>) {
         for sim in sims {
+            println!("-------------------------------");
             if sim.alive {
                 println!("{} is alive!", sim.name);
                 if let Some(partner) = sims.into_iter().find(|s| s.id == sim.partner) {
@@ -173,10 +186,10 @@ fn main() {
             } else {
                 println!("{} is dead!", sim.name)
             }
-            println!("-------------------------------");
         }
     }
     // Creating the world
+    let mut current_date: u64 = 0;
     let tundra = build_biome(12);
     let mut sims: Vec<Sim> = Vec::new();
     sims.push(build_sim(sims.len(), "Alice".to_string(), 200, true, build_genes(30.0, 90.0)));
@@ -187,16 +200,26 @@ fn main() {
     sims.push(build_sim(sims.len(), "Felicity".to_string(), 200, true, build_genes(80.0, 60.0)));
     sims.push(build_sim(sims.len(), "George".to_string(), 200, false, build_genes(30.0, 90.0)));
     sims.push(build_sim(sims.len(), "Harry".to_string(), 200, false, build_genes(40.0, 50.0)));
-    sims.push(build_sim(sims.len(), "Isabelle".to_string(), 200, false, build_genes(30.0, 30.0)));
-    sims.push(build_sim(sims.len(), "Jessica".to_string(), 200, false, build_genes(60.0, 50.0)));
+    sims.push(build_sim(sims.len(), "Isabelle".to_string(), 200, true, build_genes(30.0, 30.0)));
+    sims.push(build_sim(sims.len(), "Jessica".to_string(), 200, true, build_genes(60.0, 50.0)));
     sims.push(build_sim(sims.len(), "Kelly".to_string(), 200, true, build_genes(70.0, 10.0)));
     sims.push(build_sim(sims.len(), "Larry".to_string(), 200, false, build_genes(80.0, 60.0)));
 
     // Running the simulation
     sims = spend_a_month(sims, &tundra);
+    current_date += 1;
+    println!("{} month(s) have passed.", current_date);
     sims = spend_a_month(sims, &tundra);
+    current_date += 1;
+    println!("{} month(s) have passed.", current_date);
     sims = spend_a_month(sims, &tundra);
+    current_date += 1;
+    println!("{} month(s) have passed.", current_date);
     sims = spend_a_month(sims, &tundra);
+    current_date += 1;
+    println!("{} month(s) have passed.", current_date);
     sims = spend_a_month(sims, &tundra);
-    log_update(&sims);
+    current_date += 1;
+    println!("{} month(s) have passed.", current_date);
+    log_status(&sims);
 }
