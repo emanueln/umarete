@@ -37,13 +37,12 @@ def woman_wants_baby(woman, sims):
 
 # Baby making
 def make_a_baby(mother, father):
-    id = randint(1, 100) * randint(1, 1000000000000)
     genes = genes_from_parents(mother, father)
     if genes.female:
         name = names.random_girl_name()
     else:
         name = names.random_boy_name()
-    return classes.Sim(id, name = name, genes = genes, age=0)
+    return classes.Sim(name = name, genes = genes, age=0)
 
 def average(first, second):
     return (first + second) / 2

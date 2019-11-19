@@ -25,12 +25,11 @@ def causes_of_death(dead_sims):
     print("Deaths caused by death of mother: %s" % mother_death)
     print("Deaths from old age: %s" % old_age)
 
-def date_and_population(date, sims, dead_sims):
-    live_sims = list(filter(lambda x: x.alive, sims))
+def date_and_population(date, tribe):
     print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX")
     print("%d years have passed." %  (date // 12))
-    print("There are %d sims still alive." % len(live_sims))
-    print("There are %d dead sims." % len(dead_sims))
+    print("There are %d sims still alive." % len(tribe.sims))
+    print("There are %d dead sims." % len(tribe.dead_sims))
 
 def average_age(sims):
     total_age = 0
