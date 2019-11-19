@@ -57,10 +57,12 @@ def average(first, second):
 
 def genes_from_parents(mother, father):
     female = randint(1,100) > 51
-    food_skill = mutate(average(mother.genes.food_skill, father.genes.food_skill))
-    attractiveness = mutate(average(mother.genes.attractiveness, father.genes.attractiveness))
-    libido = mutate(average(mother.genes.libido, father.genes.libido))
-    return classes.Genes(female, mother.id, father.id, food_skill, attractiveness, libido)
+    genes = dict()
+    for attr, value in mother.genes.__dict__.items():
+        genes[attr] = value
+    for attr, value in father.genes.__dict__.items():
+        genes[attr] = mutate(average(genes[attr], value))
+    return classes.Genes(female, mother.id, father.id, genes)
 
 def mutate(gene):
     if randint(1, 100) == 100:

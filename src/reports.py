@@ -1,4 +1,5 @@
 # Reports module
+import classes
 
 def life_expectancy(dead_sims):
     months_lived = 0
@@ -42,31 +43,26 @@ def average_age(sims):
 
 
 def genetic_analysis(sims):
-    female_sims = list(filter(lambda x: x.genes.female, sims))
     male_sims = list(filter(lambda x: not x.genes.female, sims))
+    female_sims = list(filter(lambda x: x.genes.female, sims))
     if len(female_sims) == 0 or len(male_sims) == 0:
         print("Everyone is dead. Genetics analysis not performed.")
     else:
-        male_food_skill = 0
-        male_attractiveness = 0
-        male_libido = 0
-        female_food_skill = 0
-        female_attractiveness = 0
-        female_libido = 0
-        for sim in female_sims: 
-            female_food_skill += sim.genes.food_skill
-            female_attractiveness += sim.genes.attractiveness
-            female_libido += sim.genes.libido
+        male_genes = dict()
+        female_genes = dict()
+        for gene in classes.list_of_genes():
+            male_genes[gene] = 0
+            female_genes[gene] = 0
         for sim in male_sims:
-            male_food_skill += sim.genes.food_skill
-            male_attractiveness += sim.genes.attractiveness
-            male_libido += sim.genes.libido
-        print("Average food skill of males: %d/100" % (male_food_skill // len(male_sims)))
-        print("Average attractiveness of males: %d/100" % (male_attractiveness // len(male_sims)))
-        print("Average libido of males: %d/100" % (male_libido // len(male_sims)))
-        print("Average food skill of females: %d/100" % (female_food_skill // len(female_sims)))
-        print("Average attractiveness of females: %d/100" % (female_attractiveness // len(female_sims)))
-        print("Average libido of females: %d/100" % (female_libido // len(female_sims)))
+           for gene in classes.list_of_genes():
+                male_genes[gene] += getattr(sim.genes, gene)
+        for sim in female_sims:
+            for gene in classes.list_of_genes():
+                female_genes[gene] += getattr(sim.genes, gene)
+        for gene, value in male_genes.items():
+            print("Average %s of males: %d" % (gene, (value // len(male_sims))))
+        for gene, value in female_genes.items():
+            print("Average %s of females: %d" % (gene, (value // len(female_sims))))
 
 
 def list_of_sims(sims):

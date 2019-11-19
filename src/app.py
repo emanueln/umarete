@@ -14,15 +14,8 @@ from random import randint
 seed(1)
 
 # Create semi-random sims
-def random_genes():
-    gene_numbers = []
-    for _ in range(4):
-        gene_numbers.append(randint(1,100))
-    gender = gene_numbers[2] > 51
-    return classes.Genes(gender, 0, 0, gene_numbers[0], gene_numbers[1], gene_numbers[3])
-
 def random_sim():
-    genes = random_genes()
+    genes = classes.random_genes()
     if genes.female:
         name = names.random_girl_name()
     else:
