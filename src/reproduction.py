@@ -28,6 +28,8 @@ def genes_from_parents(mother, father):
 def mutate(gene):
     if randint(1, 100) == 100:
         gene += randint(-25, 25)
+        if gene < 0:
+            gene = 0
     return gene
 
 def chance_of_getting_pregnant(age):

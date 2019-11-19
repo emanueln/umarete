@@ -45,7 +45,7 @@ def average_age(sims):
 def genetic_analysis(sims):
     female_sims = list(filter(lambda x: x.genes.female, sims))
     male_sims = list(filter(lambda x: not x.genes.female, sims))
-    if len(sims) == 0:
+    if len(female_sims) == 0 or len(male_sims) == 0:
         print("Everyone is dead. Genetics analysis not performed.")
     else:
         male_food_skill = 0

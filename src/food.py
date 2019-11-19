@@ -27,18 +27,20 @@ def adult_get_food(sim, difficulty):
 def child_get_food(sim, sims, difficulty):
     father_food = 0.0
     mother_food = 0.0 
+    child_food = 0.0
+    if sim.age >= 69:
+        child_food = (sim.genes.food_skill * (sim.age - 69 / 132)) / difficulty
     father = sim.father(sims)
     mother = sim.mother(sims)
     if father is not None:
         father_food = father.genes.food_skill / difficulty - 1
     if mother is not None:
         mother_food = mother.genes.food_skill / difficulty - 1
-
-    food = father_food + mother_food
-    if food < sim.hunger():
-        sim.starvation += sim.hunger() - food 
+    child_food += father_food + mother_food
+    if child_food < sim.hunger():
+        sim.starvation += sim.hunger() - child_food 
     else:
-        sim.starvation -= food - sim.hunger()
+        sim.starvation -= child_food - sim.hunger()
         if sim.starvation <= -3.0:
             sim.starvation = -3.0
     if sim.starvation > 3.0:

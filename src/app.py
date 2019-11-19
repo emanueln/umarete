@@ -19,7 +19,7 @@ def random_genes():
     for _ in range(4):
         gene_numbers.append(randint(1,100))
     gender = gene_numbers[2] > 51
-    return classes.Genes(gender ,0 , 0, gene_numbers[0], gene_numbers[1], gene_numbers[3])
+    return classes.Genes(gender, 0, 0, gene_numbers[0], gene_numbers[1], gene_numbers[3])
 
 def random_sim(id):
     genes = random_genes()
@@ -51,16 +51,16 @@ def spend_a_year(sims, dead_sims, biome, date):
     
 # Creating the world
 date = 0
-tundra = classes.Biome(capacity=200)
+tundra = classes.Biome(capacity=20)
 sims = []
 dead_sims = []
 
 # Generate x sims to seed the world
-for _ in range(12):
+for _ in range(4):
     sims.append(random_sim(randint(1,10) * randint(0, 1000000000)))
 
 # Run simulation for x years
-for _ in range(150):
+for _ in range(100):
     sims, dead_sims, date = spend_a_year(sims, dead_sims, tundra, date)
 
 reports.date_and_population(date, sims, dead_sims)
