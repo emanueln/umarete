@@ -34,7 +34,7 @@ def spend_a_month(tribe, biome):
     food_difficulty = food.total_food_desired(tribe.sims) / biome.capacity * 100
     food.food_stage(tribe, food_difficulty)
     death.handle_deaths(tribe)
-    tribe.sims = reproduction.reproduction_stage(tribe.sims)
+    reproduction.reproduction_stage(tribe)
     mating.mating_stage(tribe.sims)
     aging.age_sims(tribe.sims)
     death.handle_deaths(tribe)

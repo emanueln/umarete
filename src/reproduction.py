@@ -5,26 +5,26 @@ from random import seed
 from random import randint
 seed(1)
 
-def reproduction_stage(sims):
+def reproduction_stage(tribe):
     return_sims = []
     new_babies = []
-    fertile_women = get_fertile_women(sims)
-    pregnant_women = get_pregnant_women(sims)
-    for sim in sims:
-        if sim in fertile_women and woman_wants_baby(sim, sims):
+    fertile_women = get_fertile_women(tribe.sims)
+    pregnant_women = get_pregnant_women(tribe.sims)
+    for sim in tribe.sims:
+        if sim in fertile_women and woman_wants_baby(sim, tribe.sims):
             if got_pregnant(sim):
                 sim.pregnant = True
-                baby = make_a_baby(sim, next(filter(lambda x: x.id == sim.partner_id, sims), None))
+                baby = make_a_baby(sim, next(filter(lambda x: x.id == sim.partner_id, tribe.sims), None))
                 new_babies.append(baby)
         elif sim in pregnant_women:
-            babies =  list(filter(lambda x: x.genes.mother_id == sim.id, sims))
+            babies =  list(filter(lambda x: x.genes.mother_id == sim.id, tribe.sims))
             for baby in babies:
                 if baby.age == 9:
                     sim.pregnant = False
                     #print("%s gave birth to a beautiful baby named %s." % (sim.name, baby.name))
         return_sims.append(sim)
     return_sims += new_babies
-    return return_sims
+    tribe.sims = return_sims
 
 def got_pregnant(sim):
     random_number = randint(1, 100)
