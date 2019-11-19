@@ -2,7 +2,7 @@
 
 # Should I approach this woman?
 def consider_for_approach(man, woman):
-    if woman.partner_id == 0 and (woman.genes.attractiveness >= man.genes.attractiveness - man.genes.libido):
+    if woman.partner_id == 0 and (man.genes.libido - woman.genes.attractiveness > 0):
         return True
     else:
         return False
@@ -10,7 +10,7 @@ def consider_for_approach(man, woman):
 # Is this woman interested in me?    
 def seduce(man, woman):
     #print("%s attempts to seduce %s." % (man.name, woman.name))
-    if man.genes.attractiveness >= woman.genes.attractiveness - woman.genes.libido:
+    if woman.genes.libido - man.genes.attractiveness > 0:
         #print("She accepts! They are now a couple.")
         return True
     else:
