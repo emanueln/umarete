@@ -12,7 +12,7 @@ def total_food_desired(sims):
 # How much does 1 sim want to eat?
 def individual_food_desired(sim):
     if sim.age < 201:
-        food_desired = 0.1 + sim.age * 0.05
+        food_desired = 0.1 + sim.age * 0.0045
     else:
         food_desired = 1.0
     return food_desired
