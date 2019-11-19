@@ -10,7 +10,7 @@ def roll_d20(mod):
 
 # 1v1
 def duel(sim_1, sim_2):
-    winner = 1
+    winner = sim_1
     sim_1_health = sim_1.genes.constitution // 5
     sim_2_health = sim_2.genes.constitution // 5
     sim_1_fatigue = 0
@@ -23,5 +23,5 @@ def duel(sim_1, sim_2):
         sim_1_fatigue += (100 - sim_1.genes.constitution) / 100
         sim_2_fatigue += (100 - sim_2.genes.constitution) / 100
     if sim_2_health > sim_1_health:
-        winner = 2
+        winner = sim_2
     return winner

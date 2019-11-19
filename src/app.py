@@ -8,6 +8,7 @@ import classes
 import names
 import reproduction
 import combat
+import internal_politics
 
 # Setting up random number generator
 from random import seed
