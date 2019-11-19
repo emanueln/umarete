@@ -26,6 +26,8 @@ def genes_from_parents(mother, father):
     return classes.Genes(female, mother.id, father.id, food_skill, attractiveness, libido)
 
 def mutate(gene):
+    if randint(1, 100) == 100:
+        gene += randint(-25, 25)
     return gene
 
 def chance_of_getting_pregnant(age):
