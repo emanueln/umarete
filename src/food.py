@@ -4,7 +4,7 @@
 def total_food_desired(sims):
     total_food = 0.0
     for sim in sims:
-        if sim.pregnant:
+        if sim.pregnant or len(list(filter(lambda x: x.genes.mother_id == sim.id and x.age < 35, sims))) > 0:
             child = next(filter(lambda x: x.genes.mother_id == sim.id and x.age < 35, sims), None)
             total_food += sim.mother_hunger(child)
         elif sim.age > 35: 
