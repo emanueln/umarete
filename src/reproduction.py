@@ -29,9 +29,9 @@ def reproduction_stage(sims):
 # Don't try for a baby if one of your existing children is starving
 def woman_wants_baby(woman, sims):
     wants_baby = True
-    babies = list(filter(lambda x: x.genes.mother_id == woman.id, sims))
-    for baby in babies:
-        if baby.starvation > 0:
+    children = list(filter(lambda x: x.genes.mother_id == woman.id and x.age < 201, sims))
+    for child in children:
+        if child.starvation > 0:
             wants_baby = False
     return wants_baby
 
