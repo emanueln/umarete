@@ -1,9 +1,11 @@
 # Death module
 
-def handle_deaths(sims):
+def handle_deaths(sims, dead_sims):
+    live_sims = list(filter(lambda sim: sim.alive, sims))
+    dead_sims += list(filter(lambda sim: not sim.alive, sims))
     return_sims = []
-    for sim in sims:
-        if sim.alive and sim.partner_id > 0 and not next(filter(lambda x: x.id == sim.partner_id, sims), None).alive:
+    for sim in live_sims:
+        if sim.partner_id > 0 and not next(filter(lambda x: x.id == sim.partner_id, sims), None).alive:
             #print("%s's partner died. They are grieving." % sim.name)
             sim.grieving = True
             sim.partner_id = 0
@@ -13,7 +15,6 @@ def handle_deaths(sims):
         elif sim.age < 9 and sim.alive:
             parent =  next(filter(lambda x: x.id == sim.genes.mother_id, sims), None)
             if not parent.alive:
-                sim.alive = False
-                #print("%s died in the womb with its mother. What a tragedy." % sim.name)
+                sim.kill("Mother died.")
         return_sims.append(sim)
-    return return_sims   
+    return return_sims, dead_sims

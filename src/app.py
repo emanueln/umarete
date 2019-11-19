@@ -32,28 +32,29 @@ def random_sim(id):
 
 # Spend time
 
-def spend_a_month(sims, biome):
+def spend_a_month(sims, dead_sims, biome):
     food_difficulty = food.total_food_desired(sims) / biome.capacity * 100
     sims = food.food_stage(sims, food_difficulty)
     sims = reproduction.reproduction_stage(sims)
     sims = mating.mating_stage(sims)
-    sims = death.handle_deaths(sims)
+    sims, dead_sims = death.handle_deaths(sims, dead_sims)
     sims = aging.age_sims(sims)
-    return sims
+    return sims, dead_sims
     
-def spend_a_year(sims, biome, date):
+def spend_a_year(sims, dead_sims, biome, date):
     for _ in range(12):
         #print("------------------------------")
         #print("Month %s of Year %s" % (date % 12 + 1, date // 12 + 1))
-        sims = spend_a_month(sims, biome) 
+        sims, dead_sims = spend_a_month(sims, dead_sims, biome) 
         date += 1
         #print("------------------------------")
-    return sims, date
+    return sims, dead_sims, date
     
 # Creating the world
 date = 0
-tundra = classes.Biome(capacity=10)
+tundra = classes.Biome(capacity=40)
 sims = []
+dead_sims = []
 
 # Generate x sims to seed the world
 for _ in range(12):
@@ -61,13 +62,8 @@ for _ in range(12):
 
 # Run simulation for x years
 for _ in range(100):
-    sims, date = spend_a_year(sims, tundra, date)
+    sims, dead_sims, date = spend_a_year(sims, dead_sims, tundra, date)
 
-reports.date_and_population(date, sims)
-reports.genetic_analysis(sims)
-
-for _ in range(100):
-    sims, date = spend_a_year(sims, tundra, date)
-
-reports.date_and_population(date, sims)
+reports.life_expectancy(dead_sims)
+reports.date_and_population(date, sims, dead_sims)
 reports.genetic_analysis(sims)

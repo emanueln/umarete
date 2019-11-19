@@ -1,10 +1,17 @@
 # Reports module
 
-def date_and_population(date, sims):
+def life_expectancy(dead_sims):
+    months_lived = 0
+    for sim in dead_sims:
+        months_lived += sim.age
+    print("Average life expectancy is % years." % (months_lived / len(dead_sims) / 12))
+
+def date_and_population(date, sims, dead_sims):
     live_sims = list(filter(lambda x: x.alive, sims))
     print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX")
     print("%d years have passed." %  (date // 12))
-    print("There are %d sims alive." % len(live_sims))
+    print("There are %d sims still alive." % len(live_sims))
+    print("There are %d dead sims." % len(dead_sims))
 
 def genetic_analysis(sims):
     live_sims = list(filter(lambda x: x.alive, sims))
