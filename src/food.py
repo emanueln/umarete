@@ -4,16 +4,12 @@
 def total_food_desired(sims):
     total_food = 0.0
     for sim in sims:
-        total_food += individual_food_desired(sim)       
+        if sim.pregnant:
+            child = next(filter(lambda x: x.genes.mother_id == sim.id and x.age < 35, sims), None)
+            total_food += sim.mother_hunger(child)
+        elif sim.age > 35: 
+            total_food += sim.hunger()
     return total_food
-
-# How much does 1 sim want to eat?
-def individual_food_desired(sim):
-    if sim.age < 201:
-        food_desired = 0.1 + sim.age * 0.0045
-    else:
-        food_desired = 1.0
-    return food_desired
 
 # Adult method for getting food
 def adult_get_food(sim, difficulty):
