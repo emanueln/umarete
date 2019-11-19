@@ -11,48 +11,35 @@ def total_food_desired(sims):
             total_food += sim.hunger()
     return total_food
 
-# Adult method for getting food
-def adult_get_food(sim, difficulty):
-    food = sim.genes.food_skill / difficulty
-    if food < 1.0:
-        sim.starvation += 1.0 - food 
-    else:
-        sim.starvation -= food - 1.0
-        if sim.starvation <= -3.0:
-            sim.starvation = -3.0
-    if sim.starvation > 3.0:
-        sim.kill(1)
-    return sim
-
-def child_get_food(sim, sims, difficulty):
-    father_food = 0.0
-    mother_food = 0.0 
-    child_food = 0.0
-    if sim.age >= 69:
-        child_food = (sim.genes.food_skill * (sim.age - 69 / 132)) / difficulty
+# How much extra food do the parents have?
+def mother_and_father_food(sim, sims, difficulty):
+    father_food, mother_food = (0.0, 0.0)
     father = sim.father(sims)
     mother = sim.mother(sims)
     if father is not None:
         father_food = father.genes.food_skill / difficulty - 1
     if mother is not None:
         mother_food = mother.genes.food_skill / difficulty - 1
-    child_food += father_food + mother_food
-    if child_food < sim.hunger():
-        sim.starvation += sim.hunger() - child_food 
-    else:
-        sim.starvation -= child_food - sim.hunger()
-        if sim.starvation <= -3.0:
-            sim.starvation = -3.0
-    if sim.starvation > 3.0:
-        sim.kill(3)
-    return sim
+    return father_food + mother_food
 
 # One sim looks for food
 def get_food(sim, sims, difficulty):
-    if sim.age >= 201:
-        sim = adult_get_food(sim, difficulty) 
-    elif sim.age > 35:
-        sim = child_get_food(sim, sims, difficulty)
+    if sim.age < 35:
+        return sim
+    food = sim.find_food(difficulty)
+    if sim.age < 201:
+        food += mother_and_father_food(sim, sims, difficulty)
+    if food < sim.hunger():
+        sim.starvation += sim.hunger() - food
+        if sim.starvation > 3.0:
+            if sim.age >= 201:
+                sim.kill(1)
+            else:
+                sim.kill(3)
+    else:
+        sim.starvation -= food - sim.hunger()
+        if sim.starvation <= -3.0:
+            sim.starvation = -3.0
     return sim
     
 # Everyone looks for food

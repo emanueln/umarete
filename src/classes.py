@@ -22,6 +22,15 @@ class Sim:
         self.pregnant = False
         self.death_cause = 0
 
+    def find_food(self, difficulty):
+        if self.age < 69:
+            food = 0.0
+        elif self.age < 201:
+            food = self.genes.food_skill / difficulty * ((self.age - 69) / 132)
+        else:
+            food = self.genes.food_skill / difficulty
+        return food
+
     def hunger(self):
         if self.age < 201:
             hunger = 0.1 + self.age * 0.0045
