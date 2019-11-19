@@ -2,12 +2,14 @@
 import classes
 
 def life_expectancy(dead_sims):
+    print("--------LIFE EXPECTANCY----------")
     months_lived = 0
     for sim in dead_sims:
         months_lived += sim.age
     print("Average life expectancy is %.1f years." % (months_lived / len(dead_sims) / 12))
 
 def causes_of_death(dead_sims):
+    print("--------CAUSE OF DEATH----------")
     starvation = 0
     childhood_starvation = 0
     mother_death = 0
@@ -33,6 +35,7 @@ def date_and_population(date, tribe):
     print("There are %d dead sims." % len(tribe.dead_sims))
 
 def average_age(sims):
+    print("--------AVERAGE AGE----------")
     total_age = 0
     if len(sims) == 0:
         print("Everyone is dead. No average age.")
@@ -59,10 +62,12 @@ def genetic_analysis(sims):
         for sim in female_sims:
             for gene in classes.list_of_genes():
                 female_genes[gene] += getattr(sim.genes, gene)
+        print("----------MALES----------")
         for gene, value in male_genes.items():
-            print("Average %s of males: %d" % (gene, (value // len(male_sims))))
+            print("Average %s: %d" % (gene, (value // len(male_sims))))
+        print("--------FEMALES----------")
         for gene, value in female_genes.items():
-            print("Average %s of females: %d" % (gene, (value // len(female_sims))))
+            print("Average %s: %d" % (gene, (value // len(female_sims))))
 
 
 def list_of_sims(sims):
