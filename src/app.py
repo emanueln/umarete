@@ -7,6 +7,7 @@ import death
 import classes
 import names
 import reproduction
+import combat
 
 # Setting up random number generator
 from random import seed

@@ -22,12 +22,12 @@ class Genes:
         self.attractiveness = genes["attractiveness"]
         self.libido = genes["libido"]
         self.strength = genes["strength"]
-        self.agility = genes["agility"]
-        self.endurance = genes["endurance"]
+        self.dexterity = genes["dexterity"]
+        self.constitution = genes["constitution"]
         self.ambition = genes["ambition"]
 
 def list_of_genes():
-    return ["food_skill", "attractiveness", "libido", "strength", "agility", "endurance", "ambition"]
+    return ["food_skill", "attractiveness", "libido", "strength", "dexterity", "constitution", "ambition"]
 
 class Sim:
     def __init__(self, name, genes, age):
