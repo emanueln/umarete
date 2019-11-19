@@ -8,6 +8,7 @@ def life_expectancy(dead_sims):
 
 def causes_of_death(dead_sims):
     starvation = 0
+    childhood_starvation = 0
     mother_death = 0
     old_age = 0
     for sim in dead_sims:
@@ -15,9 +16,12 @@ def causes_of_death(dead_sims):
             starvation += 1
         elif sim.death_cause == 2:
             mother_death += 1
+        elif sim.death_cause == 3:
+            childhood_starvation += 1
         elif sim.death_cause == 5:
             old_age += 1
     print("Deaths by starvation: %s" % starvation)
+    print("Deaths by starvation in childhood: %s" % childhood_starvation)
     print("Deaths caused by death of mother: %s" % mother_death)
     print("Deaths from old age: %s" % old_age)
 

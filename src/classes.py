@@ -32,6 +32,12 @@ class Sim:
     def mother_hunger(self, child):
         return 1.0 + child.hunger()
 
+    def father(self, sims):
+        return next(filter(lambda x: x.id == self.genes.father_id, sims), None)
+
+    def mother(self, sims):
+        return next(filter(lambda x: x.id == self.genes.mother_id, sims), None)
+
     def kill(self, cause):
         self.alive = False
         self.death_cause = cause

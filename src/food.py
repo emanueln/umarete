@@ -24,16 +24,39 @@ def adult_get_food(sim, difficulty):
         sim.kill(1)
     return sim
 
+def child_get_food(sim, sims, difficulty):
+    father_food = 0.0
+    mother_food = 0.0 
+    father = sim.father(sims)
+    mother = sim.mother(sims)
+    if father is not None:
+        father_food = father.genes.food_skill / difficulty - 1
+    if mother is not None:
+        mother_food = mother.genes.food_skill / difficulty - 1
+
+    food = father_food + mother_food
+    if food < sim.hunger():
+        sim.starvation += sim.hunger() - food 
+    else:
+        sim.starvation -= food - sim.hunger()
+        if sim.starvation <= -3.0:
+            sim.starvation = -3.0
+    if sim.starvation > 3.0:
+        sim.kill(3)
+    return sim
+
 # One sim looks for food
-def get_food(sim, difficulty):
+def get_food(sim, sims, difficulty):
     if sim.age >= 201:
         sim = adult_get_food(sim, difficulty) 
+    elif sim.age > 35:
+        sim = child_get_food(sim, sims, difficulty)
     return sim
     
 # Everyone looks for food
 def food_stage(sims, difficulty):
     new_sims = []
     for sim in sims:
-        sim = get_food(sim, difficulty)
+        sim = get_food(sim, sims, difficulty)
         new_sims.append(sim)
     return new_sims
