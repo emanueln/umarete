@@ -1,12 +1,10 @@
-# Food Functions
+# Food module
 
 # How much do all sims want to eat?
 def total_food_desired(sims):
     total_food = 0.0
     for sim in sims:
-        if sim.alive: 
-            total_food += individual_food_desired(sim)
-            
+        total_food += individual_food_desired(sim)       
     return total_food
 
 # How much does 1 sim want to eat?
@@ -17,35 +15,29 @@ def individual_food_desired(sim):
         food_desired = 1.0
     return food_desired
 
-# Did the sim die?
-def starved_to_death(sim, difficulty):
-    dead = False
+# Adult method for getting food
+def adult_get_food(sim, difficulty):
     food = sim.genes.food_skill / difficulty
-    if food < 0.5:
-        sim.starvation += food / 0.2
+    if food < 1.0:
+        sim.starvation += 1.0 - food 
     else:
-        sim.starvation -= food / 0.2
-    if sim.starvation > 5:
-        dead = True
-    return dead
-
+        sim.starvation -= food - 1.0
+        if sim.starvation <= -3.0:
+            sim.starvation = -3.0
+    if sim.starvation > 3.0:
+        sim.kill("starvation")
+    return sim
 
 # One sim looks for food
 def get_food(sim, difficulty):
     if sim.age >= 201:
-        dead = starved_to_death(sim, difficulty)
-    else:
-        # children method for getting food here
-        dead = False
-    if dead:
-        sim.kill("starvation")
+        sim = adult_get_food(sim, difficulty) 
     return sim
     
 # Everyone looks for food
 def food_stage(sims, difficulty):
     new_sims = []
     for sim in sims:
-        if sim.alive:
-            sim = get_food(sim, difficulty)
+        sim = get_food(sim, difficulty)
         new_sims.append(sim)
     return new_sims

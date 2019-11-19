@@ -35,10 +35,11 @@ def random_sim(id):
 def spend_a_month(sims, dead_sims, biome):
     food_difficulty = food.total_food_desired(sims) / biome.capacity * 100
     sims = food.food_stage(sims, food_difficulty)
+    sims, dead_sims = death.handle_deaths(sims, dead_sims)
     sims = reproduction.reproduction_stage(sims)
     sims = mating.mating_stage(sims)
-    sims, dead_sims = death.handle_deaths(sims, dead_sims)
     sims = aging.age_sims(sims)
+    sims, dead_sims = death.handle_deaths(sims, dead_sims)
     return sims, dead_sims
     
 def spend_a_year(sims, dead_sims, biome, date):
@@ -52,18 +53,18 @@ def spend_a_year(sims, dead_sims, biome, date):
     
 # Creating the world
 date = 0
-tundra = classes.Biome(capacity=40)
+tundra = classes.Biome(capacity=200)
 sims = []
 dead_sims = []
 
 # Generate x sims to seed the world
 for _ in range(12):
-    sims.append(random_sim(len(sims) + 1))
+    sims.append(random_sim(randint(1,10) * randint(0, 1000000000)))
 
 # Run simulation for x years
-for _ in range(100):
+for _ in range(50):
     sims, dead_sims, date = spend_a_year(sims, dead_sims, tundra, date)
 
-reports.life_expectancy(dead_sims)
 reports.date_and_population(date, sims, dead_sims)
+reports.life_expectancy(dead_sims)
 reports.genetic_analysis(sims)
