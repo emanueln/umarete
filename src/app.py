@@ -49,20 +49,27 @@ def spend_a_year(sims, dead_sims, biome, date):
         #print("------------------------------")
     return sims, dead_sims, date
     
-# Creating the world
+# Creating the world from user input
+print("What should the carrying capacity be?")
+capacity = int(input())
+print("What should the starting population be?")
+starting_population = int(input())
+print("How many years should we simulate?")
+sim_length = int(input())
 date = 0
-tundra = classes.Biome(capacity=20)
+tundra = classes.Biome(capacity=capacity)
 sims = []
 dead_sims = []
 
 # Generate x sims to seed the world
-for _ in range(4):
+for _ in range(starting_population):
     sims.append(random_sim(randint(1,10) * randint(0, 1000000000)))
 
 # Run simulation for x years
-for _ in range(500):
+for _ in range(sim_length):
     sims, dead_sims, date = spend_a_year(sims, dead_sims, tundra, date)
 
+# Give status report at the end
 reports.date_and_population(date, sims, dead_sims)
 reports.average_age(sims)
 reports.genetic_analysis(sims)
