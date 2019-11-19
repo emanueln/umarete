@@ -6,6 +6,23 @@ def date_and_population(date, sims):
     print("%d years have passed." %  (date // 12))
     print("There are %d sims alive." % len(live_sims))
 
+def genetic_analysis(sims):
+    live_sims = list(filter(lambda x: x.alive, sims))
+    if len(live_sims) == 0:
+        print("Everyone is dead. Genetics analysis not performed.")
+    else:
+        food_skill = 0
+        attractiveness = 0
+        libido = 0
+        for sim in live_sims: 
+            food_skill += sim.genes.food_skill
+            attractiveness += sim.genes.attractiveness
+            libido += sim.genes.libido
+        print("Average food skill of the population: %s/100" % (food_skill // len(live_sims)))
+        print("Average attractiveness of the population: %s/100" % (attractiveness // len(live_sims)))
+        print("Average libido of the population: %s/100" % (libido // len(live_sims)))
+
+
 def list_of_sims(sims):
     print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX")
     print("End of Simulation Status Log")

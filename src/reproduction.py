@@ -51,7 +51,7 @@ def reproduction_stage(sims):
             for baby in babies:
                 if baby.age == 9: 
                     sim.pregnant = False
-                    print("%s gave birth to a beautiful baby named %s." % (sim.name, baby.name))
+                    #print("%s gave birth to a beautiful baby named %s." % (sim.name, baby.name))
         return_sims.append(sim)
     return_sims += new_babies
     return return_sims

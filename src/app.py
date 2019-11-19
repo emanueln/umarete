@@ -52,7 +52,7 @@ def spend_a_year(sims, biome, date):
     
 # Creating the world
 date = 0
-tundra = classes.Biome(capacity=100)
+tundra = classes.Biome(capacity=10)
 sims = []
 
 # Generate x sims to seed the world
@@ -64,3 +64,10 @@ for _ in range(100):
     sims, date = spend_a_year(sims, tundra, date)
 
 reports.date_and_population(date, sims)
+reports.genetic_analysis(sims)
+
+for _ in range(100):
+    sims, date = spend_a_year(sims, tundra, date)
+
+reports.date_and_population(date, sims)
+reports.genetic_analysis(sims)
