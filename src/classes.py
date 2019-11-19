@@ -19,10 +19,11 @@ class Sim:
         self.alive = True
         self.starvation = 0
         self.grieving = False
+        self.pregnant = False
         
     def kill(self, cause):
         self.alive = False
-        print("%s has tragically died of %s!" % (self.name, cause))
+        #print("%s has tragically died of %s!" % (self.name, cause))
 
 class Biome:
   def __init__(self, capacity):

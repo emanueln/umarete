@@ -9,17 +9,16 @@ def consider_for_approach(man, woman):
 
 # Is this woman interested in me?    
 def seduce(man, woman):
-    print("%s attempts to seduce %s." % (man.name, woman.name))
+    #print("%s attempts to seduce %s." % (man.name, woman.name))
     if man.genes.attractiveness >= woman.genes.attractiveness - woman.genes.libido:
-        print("She accepts! They are now a couple.")
+        #print("She accepts! They are now a couple.")
         return True
     else:
-        print("She turns him away. Better luck next time.")
+        #print("She turns him away. Better luck next time.")
         return False
 
 # Consider all women
 def man_looks_for_mate(man, women):
-    print("%s is looking for a potential mate." % man.name)
     tried = False
     for woman in women:
         if not tried and consider_for_approach(man, woman):
@@ -27,8 +26,8 @@ def man_looks_for_mate(man, women):
             if seduce(man, woman):
                 woman.partner_id = man.id
                 man.partner_id = woman.id
-    if tried == False:
-        print("He doesn't find any women desirable enough.")
+    #if tried == False:
+        #print("He doesn't find any women desirable enough.")
     return man, women
 
 # All men look for mates
