@@ -43,7 +43,7 @@ def spend_a_year(tribe, biome, date):
     for _ in range(12):
         spend_a_month(tribe, biome)
         date += 1
-    return tribe, date
+    return date
     
 # Creating the world from user input
 print("What should the carrying capacity be?")
@@ -74,7 +74,7 @@ tribe = classes.Tribe(name="First Tribe", sims = sims)
 
 # Run simulation for x years
 for _ in range(sim_length):
-    spend_a_year(tribe, tundra, date)
+    date = spend_a_year(tribe, tundra, date)
 
 # Give status report at the end
 reports.date_and_population(date, tribe)
