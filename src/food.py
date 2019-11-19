@@ -23,29 +23,33 @@ def mother_and_father_food(sim, sims, difficulty):
     return father_food + mother_food
 
 # One sim looks for food
-def get_food(sim, sims, difficulty):
+def get_food(sim, tribe, difficulty):
     if sim.age < 35:
         return sim
     food = sim.find_food(difficulty)
     if sim.age < 201:
-        food += mother_and_father_food(sim, sims, difficulty)
+        food += mother_and_father_food(sim, tribe.sims, difficulty)
     if food < sim.hunger():
-        sim.starvation += sim.hunger() - food
-        if sim.starvation > 3.0:
-            if sim.age >= 201:
-                sim.kill(1)
-            else:
-                sim.kill(3)
+        if tribe.food_store >= sim.hunger() - food:
+            tribe.food_store -= sim.hunger() - food
+        else:
+            sim.starvation += sim.hunger() - food
+            if sim.starvation > 3.0:
+                if sim.age >= 201:
+                    sim.kill(1)
+                else:
+                    sim.kill(3)
     else:
         sim.starvation -= food - sim.hunger()
-        if sim.starvation <= -3.0:
-            sim.starvation = -3.0
-    return sim
+        if sim.starvation <= -1.0:
+            tribe.food_store += ((sim.starvation * -1) - 1) 
+            sim.starvation = -1.0
     
 # Everyone looks for food
-def food_stage(sims, difficulty):
+def food_stage(tribe, difficulty):
     new_sims = []
-    for sim in sims:
-        sim = get_food(sim, sims, difficulty)
+    for sim in tribe.sims:
+        get_food(sim, tribe, difficulty)
         new_sims.append(sim)
-    return new_sims
+    tribe.sims = new_sims
+    return tribe

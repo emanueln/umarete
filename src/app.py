@@ -32,27 +32,35 @@ def random_sim():
 # Spend time
 def spend_a_month(tribe, biome):
     food_difficulty = food.total_food_desired(tribe.sims) / biome.capacity * 100
-    tribe.sims = food.food_stage(tribe.sims, food_difficulty)
-    tribe.sims, tribe.dead_sims = death.handle_deaths(tribe.sims, tribe.dead_sims)
+    food.food_stage(tribe, food_difficulty)
+    death.handle_deaths(tribe)
     tribe.sims = reproduction.reproduction_stage(tribe.sims)
-    tribe.sims = mating.mating_stage(tribe.sims)
-    tribe.sims = aging.age_sims(tribe.sims)
-    tribe.sims, tribe.dead_sims = death.handle_deaths(tribe.sims, tribe.dead_sims)
-    return tribe
+    mating.mating_stage(tribe.sims)
+    aging.age_sims(tribe.sims)
+    death.handle_deaths(tribe)
     
 def spend_a_year(tribe, biome, date):
     for _ in range(12):
-        tribe = spend_a_month(tribe, biome) 
+        spend_a_month(tribe, biome)
         date += 1
     return tribe, date
     
 # Creating the world from user input
 print("What should the carrying capacity be?")
-capacity = int(input())
+try:
+    capacity = int(input())
+except ValueError:
+    capacity = 20
 print("What should the starting population be?")
-starting_population = int(input())
+try:
+    starting_population = int(input())
+except ValueError:
+    starting_population = 12
 print("How many years should we simulate?")
-sim_length = int(input())
+try:
+    sim_length = int(input())
+except ValueError:
+    sim_length = 100
 
 date = 0
 tundra = classes.Biome(capacity=capacity)
@@ -66,7 +74,7 @@ tribe = classes.Tribe(name="First Tribe", sims = sims)
 
 # Run simulation for x years
 for _ in range(sim_length):
-    tribe, date = spend_a_year(tribe, tundra, date)
+    spend_a_year(tribe, tundra, date)
 
 # Give status report at the end
 reports.date_and_population(date, tribe)
