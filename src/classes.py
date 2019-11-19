@@ -64,12 +64,7 @@ class Tribe:
         self.sims = sims
         self.dead_sims = []
         self.food_store = 0.0
-    
-    def add_dead_sims(self, sims):
-        self.dead_sims += sims
-
-    def access_food_store(self, food):
-        self.food_store += food
+        self.chief_id = 0
     
 class Biome:
   def __init__(self, capacity):
