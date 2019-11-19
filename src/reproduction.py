@@ -12,7 +12,7 @@ def reproduction_stage(sims):
     pregnant_women = get_pregnant_women(sims)
     for sim in sims:
         if sim in fertile_women and woman_wants_baby(sim, sims):
-            if randint(0, 100) <= chance_of_getting_pregnant(sim.age) * 100:
+            if got_pregnant(sim):
                 sim.pregnant = True
                 baby = make_a_baby(sim, next(filter(lambda x: x.id == sim.partner_id, sims), None))
                 new_babies.append(baby)
@@ -25,6 +25,14 @@ def reproduction_stage(sims):
         return_sims.append(sim)
     return_sims += new_babies
     return return_sims
+
+def got_pregnant(sim):
+    random_number = randint(1, 100)
+    chance = chance_of_getting_pregnant(sim.age) * 100
+    if random_number < chance:
+        return True
+    else:
+        return False
 
 # Don't try for a baby if one of your existing children is starving
 def woman_wants_baby(woman, sims):
