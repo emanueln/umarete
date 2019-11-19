@@ -5,6 +5,36 @@ from random import seed
 from random import randint
 seed(1)
 
+def reproduction_stage(sims):
+    return_sims = []
+    new_babies = []
+    fertile_women = get_fertile_women(sims)
+    pregnant_women = get_pregnant_women(sims)
+    for sim in sims:
+        if sim in fertile_women and woman_wants_baby(sim, sims):
+            if randint(0, 100) <= chance_of_getting_pregnant(sim.age) * 100:
+                sim.pregnant = True
+                baby = make_a_baby(sim, next(filter(lambda x: x.id == sim.partner_id, sims), None))
+                new_babies.append(baby)
+        elif sim in pregnant_women:
+            babies =  list(filter(lambda x: x.genes.mother_id == sim.id, sims))
+            for baby in babies:
+                if baby.age == 9:
+                    sim.pregnant = False
+                    #print("%s gave birth to a beautiful baby named %s." % (sim.name, baby.name))
+        return_sims.append(sim)
+    return_sims += new_babies
+    return return_sims
+
+# Don't try for a baby if one of your existing children is starving
+def woman_wants_baby(woman, sims):
+    wants_baby = True
+    babies = list(filter(lambda x: x.genes.mother_id == woman.id, sims))
+    for baby in babies:
+        if baby.starvation > 0:
+            wants_baby = False
+    return wants_baby
+
 # Baby making
 def make_a_baby(mother, father):
     id = randint(1, 100) * randint(1, 1000000000000)
@@ -50,24 +80,3 @@ def get_fertile_women(sims):
 
 def get_pregnant_women(sims):
     return list(filter(lambda x: (x.pregnant), sims))
-
-def reproduction_stage(sims):
-    return_sims = []
-    new_babies = []
-    fertile_women = get_fertile_women(sims)
-    pregnant_women = get_pregnant_women(sims)
-    for sim in sims:
-        if sim in fertile_women:
-            if randint(0, 100) <= chance_of_getting_pregnant(sim.age) * 100:
-                sim.pregnant = True
-                baby = make_a_baby(sim, next(filter(lambda x: x.id == sim.partner_id, sims), None))
-                new_babies.append(baby)
-        elif sim in pregnant_women:
-            babies =  list(filter(lambda x: x.genes.mother_id == sim.id, sims))
-            for baby in babies:
-                if baby.age == 9:
-                    sim.pregnant = False
-                    #print("%s gave birth to a beautiful baby named %s." % (sim.name, baby.name))
-        return_sims.append(sim)
-    return_sims += new_babies
-    return return_sims

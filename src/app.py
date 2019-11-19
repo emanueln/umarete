@@ -60,7 +60,7 @@ for _ in range(4):
     sims.append(random_sim(randint(1,10) * randint(0, 1000000000)))
 
 # Run simulation for x years
-for _ in range(100):
+for _ in range(500):
     sims, dead_sims, date = spend_a_year(sims, dead_sims, tundra, date)
 
 reports.date_and_population(date, sims, dead_sims)
