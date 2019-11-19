@@ -6,6 +6,21 @@ def life_expectancy(dead_sims):
         months_lived += sim.age
     print("Average life expectancy is %.1f years." % (months_lived / len(dead_sims) / 12))
 
+def causes_of_death(dead_sims):
+    starvation = 0
+    mother_death = 0
+    old_age = 0
+    for sim in dead_sims:
+        if sim.death_cause == 1:
+            starvation += 1
+        elif sim.death_cause == 2:
+            mother_death += 1
+        elif sim.death_cause == 5:
+            old_age += 1
+    print("Deaths by starvation: %s" % starvation)
+    print("Deaths caused by death of mother: %s" % mother_death)
+    print("Deaths from old age: %s" % old_age)
+
 def date_and_population(date, sims, dead_sims):
     live_sims = list(filter(lambda x: x.alive, sims))
     print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX")

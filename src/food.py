@@ -21,7 +21,7 @@ def adult_get_food(sim, difficulty):
         if sim.starvation <= -3.0:
             sim.starvation = -3.0
     if sim.starvation > 3.0:
-        sim.kill("starvation")
+        sim.kill(1)
     return sim
 
 # One sim looks for food

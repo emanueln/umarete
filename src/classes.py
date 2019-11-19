@@ -20,7 +20,8 @@ class Sim:
         self.starvation = 0
         self.grieving = False
         self.pregnant = False
-    
+        self.death_cause = 0
+
     def hunger(self):
         if self.age < 201:
             hunger = 0.1 + self.age * 0.0045
@@ -33,7 +34,7 @@ class Sim:
 
     def kill(self, cause):
         self.alive = False
-        #print("%s has tragically died of %s!" % (self.name, cause))
+        self.death_cause = cause
 
 class Biome:
   def __init__(self, capacity):

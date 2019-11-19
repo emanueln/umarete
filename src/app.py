@@ -64,6 +64,8 @@ for _ in range(150):
     sims, dead_sims, date = spend_a_year(sims, dead_sims, tundra, date)
 
 reports.date_and_population(date, sims, dead_sims)
-reports.life_expectancy(dead_sims)
 reports.average_age(sims)
 reports.genetic_analysis(sims)
+if len(dead_sims) > 0:    
+    reports.life_expectancy(dead_sims)
+    reports.causes_of_death(dead_sims)

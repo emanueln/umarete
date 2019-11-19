@@ -15,6 +15,6 @@ def handle_deaths(sims, dead_sims):
         elif sim.age < 9 and sim.alive:
             parent =  next(filter(lambda x: x.id == sim.genes.mother_id, sims), None)
             if not parent.alive:
-                sim.kill("death of the mother")
+                sim.kill(2)
         return_sims.append(sim)
     return return_sims, dead_sims
