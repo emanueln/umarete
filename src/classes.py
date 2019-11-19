@@ -2,12 +2,12 @@
 
 class Genes:
     def __init__(self, a, b, c, d, e, f):
-        self.food_skill = a
-        self.attractiveness = b
-        self.female = c
-        self.libido = d
-        self.mother_id = e
-        self.father_id = f
+        self.female = a
+        self.mother_id = b
+        self.father_id = c
+        self.food_skill = d
+        self.attractiveness = e
+        self.libido = f
 
 class Sim:
     def __init__(self, id, name, genes, age):

@@ -23,7 +23,7 @@ def genes_from_parents(mother, father):
     food_skill = mutate(average(mother.genes.food_skill, father.genes.food_skill))
     attractiveness = mutate(average(mother.genes.attractiveness, father.genes.attractiveness))
     libido = mutate(average(mother.genes.libido, father.genes.libido))
-    return classes.Genes(food_skill, attractiveness, female, libido, mother.id, father.id)
+    return classes.Genes(female, mother.id, father.id, food_skill, attractiveness, libido)
 
 def mutate(gene):
     return gene
