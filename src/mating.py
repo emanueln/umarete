@@ -32,7 +32,7 @@ def man_looks_for_mate(man, single_women):
 
 # Should I approach this woman?
 def consider_for_approach(man, woman):
-    if man.genes.libido - woman.genes.attractiveness > 0:
+    if (man.genes.attractiveness - man.genes.libido // 2) < woman.genes.attractiveness:
         return True
     else:
         return False
@@ -40,7 +40,7 @@ def consider_for_approach(man, woman):
 # Is this woman interested in me?    
 def seduce(man, woman):
     #print("%s attempts to seduce %s." % (man.name, woman.name))
-    if woman.genes.libido - man.genes.attractiveness > 0:
+    if (woman.genes.attractiveness - woman.genes.libido // 2) < man.genes.attractiveness:
         #print("She accepts! They are now a couple.")
         return True
     else:

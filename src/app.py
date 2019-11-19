@@ -14,7 +14,6 @@ from random import randint
 seed(1)
 
 # Create semi-random sims
-
 def random_genes():
     gene_numbers = []
     for _ in range(4):
@@ -31,7 +30,6 @@ def random_sim(id):
     return classes.Sim(id = id, name = name, genes = genes, age=201)
 
 # Spend time
-
 def spend_a_month(sims, dead_sims, biome):
     food_difficulty = food.total_food_desired(sims) / biome.capacity * 100
     sims = food.food_stage(sims, food_difficulty)
@@ -62,9 +60,10 @@ for _ in range(12):
     sims.append(random_sim(randint(1,10) * randint(0, 1000000000)))
 
 # Run simulation for x years
-for _ in range(50):
+for _ in range(500):
     sims, dead_sims, date = spend_a_year(sims, dead_sims, tundra, date)
 
 reports.date_and_population(date, sims, dead_sims)
 reports.life_expectancy(dead_sims)
+reports.average_age(sims)
 reports.genetic_analysis(sims)

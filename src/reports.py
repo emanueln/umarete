@@ -13,6 +13,16 @@ def date_and_population(date, sims, dead_sims):
     print("There are %d sims still alive." % len(live_sims))
     print("There are %d dead sims." % len(dead_sims))
 
+def average_age(sims):
+    total_age = 0
+    if len(sims) == 0:
+        print("Everyone is dead. No average age.")
+    else:
+        for sim in sims:
+            total_age += sim.age
+        print("Average age of living sims: %.1f" % (total_age / len(sims) / 12))
+
+
 def genetic_analysis(sims):
     female_sims = list(filter(lambda x: x.genes.female, sims))
     male_sims = list(filter(lambda x: not x.genes.female, sims))
