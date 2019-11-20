@@ -33,6 +33,7 @@ def spend_a_month(tribe, biome):
     mating.mating_stage(tribe.sims)
     aging.age_sims(tribe.sims)
     death.handle_deaths(tribe)
+    internal_politics.politics_stage(tribe)
     
 def spend_a_year(tribe, biome, date):
     for _ in range(12):
