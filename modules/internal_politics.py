@@ -1,6 +1,6 @@
 # Internal Tribal Politics module
 
-import combat
+from modules import combat
 
 def politics_stage(tribe):
     if tribe.chief_id == 0:
