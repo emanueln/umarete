@@ -1,5 +1,5 @@
 # Reports module
-import classes
+from modules import classes
 
 def life_expectancy(dead_sims):
     print("--------LIFE EXPECTANCY----------")

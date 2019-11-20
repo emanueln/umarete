@@ -1,14 +1,14 @@
 # Imports
-import food
-import mating
-import reports 
-import aging
-import death
-import classes
-import names
-import reproduction
-import combat
-import internal_politics
+from modules import food
+from modules import mating
+from modules import reports 
+from modules import aging
+from modules import death
+from modules import classes
+from modules import names
+from modules import reproduction
+from modules import combat
+from modules import internal_politics
 
 # Setting up random number generator
 from random import seed

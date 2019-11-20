@@ -1,6 +1,6 @@
 # Reproduction module
-import classes
-import names
+from modules import classes
+from modules import names
 from random import seed
 from random import randint
 seed(1)
