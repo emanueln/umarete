@@ -9,8 +9,9 @@ def politics_stage(tribe):
 # Election process
 def election_process(tribe): 
     candidates = list(filter(lambda x: (x.age >= 201 and not x.genes.female and x.genes.ambition > 50), tribe.sims))
-    winner = tournament(candidates)
-    tribe.chief_id = winner.id
+    if len(candidates) > 0:
+        winner = tournament(candidates)
+        tribe.chief_id = winner.id
 
 # Tournament
 def tournament(candidates):

@@ -16,9 +16,9 @@ def handle_deaths(tribe):
         elif sim.grieving:
             #print("%s is no longer grieving. They will start looking for a partner." % sim.name)
             sim.grieving = False
-        elif sim.age < 9 and sim.alive:
-            parent =  next(filter(lambda x: x.id == sim.genes.mother_id, tribe.sims), None)
-            if not parent.alive:
+        elif sim.age < 9:
+            mother =  sim.mother(tribe.sims)
+            if not mother.alive:
                 sim.kill(2)
         new_sims.append(sim)
     tribe.sims = new_sims

@@ -3,8 +3,7 @@
 def age_sims(sims):
     return_sims = []
     for sim in sims:
-        if sim.alive:
-            sim.age += 1
+        sim.age += 1
         if sim.age > 720:
             sim.kill(5)
         return_sims.append(sim)
