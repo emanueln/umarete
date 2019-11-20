@@ -2,8 +2,12 @@
 
 def handle_deaths(tribe):
     live_sims = list(filter(lambda sim: sim.alive, tribe.sims))
-    tribe.dead_sims += list(filter(lambda sim: not sim.alive, tribe.sims))
+    new_dead = list(filter(lambda sim: not sim.alive, tribe.sims))
+    tribe.dead_sims += new_dead
     new_sims = []
+    for dead in new_dead:
+        if dead.id == tribe.chief_id:
+            tribe.chief_id = 0
     for sim in live_sims:
         if sim.partner_id > 0 and not next(filter(lambda x: x.id == sim.partner_id, tribe.sims), None).alive:
             #print("%s's partner died. They are grieving." % sim.name)

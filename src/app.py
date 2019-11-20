@@ -7,6 +7,8 @@ import death
 import classes
 import names
 import reproduction
+import combat
+import internal_politics
 
 # Setting up random number generator
 from random import seed
@@ -14,15 +16,8 @@ from random import randint
 seed(1)
 
 # Create semi-random sims
-def random_genes():
-    gene_numbers = []
-    for _ in range(4):
-        gene_numbers.append(randint(1,100))
-    gender = gene_numbers[2] > 51
-    return classes.Genes(gender, 0, 0, gene_numbers[0], gene_numbers[1], gene_numbers[3])
-
 def random_sim():
-    genes = random_genes()
+    genes = classes.random_genes()
     if genes.female:
         name = names.random_girl_name()
     else:
@@ -38,6 +33,7 @@ def spend_a_month(tribe, biome):
     mating.mating_stage(tribe.sims)
     aging.age_sims(tribe.sims)
     death.handle_deaths(tribe)
+    internal_politics.politics_stage(tribe)
     
 def spend_a_year(tribe, biome, date):
     for _ in range(12):

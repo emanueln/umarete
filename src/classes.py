@@ -6,14 +6,28 @@ seed(1)
 def random_id():
     return randint(1,10) * randint(0, 1000000000)
 
+def random_genes():
+    genes = dict()
+    for gene in list_of_genes():
+        genes[gene] = randint(1,100)
+    gender = randint(1,100) > 51
+    return Genes(gender, 0, 0, genes)
+
 class Genes:
-    def __init__(self, a, b, c, d, e, f):
+    def __init__(self, a, b, c, genes):
         self.female = a
         self.mother_id = b
         self.father_id = c
-        self.food_skill = d
-        self.attractiveness = e
-        self.libido = f
+        self.food_skill = genes["food_skill"]
+        self.attractiveness = genes["attractiveness"]
+        self.libido = genes["libido"]
+        self.strength = genes["strength"]
+        self.dexterity = genes["dexterity"]
+        self.constitution = genes["constitution"]
+        self.ambition = genes["ambition"]
+
+def list_of_genes():
+    return ["food_skill", "attractiveness", "libido", "strength", "dexterity", "constitution", "ambition"]
 
 class Sim:
     def __init__(self, name, genes, age):
@@ -64,12 +78,7 @@ class Tribe:
         self.sims = sims
         self.dead_sims = []
         self.food_store = 0.0
-    
-    def add_dead_sims(self, sims):
-        self.dead_sims += sims
-
-    def access_food_store(self, food):
-        self.food_store += food
+        self.chief_id = 0
     
 class Biome:
   def __init__(self, capacity):
