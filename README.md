@@ -4,19 +4,17 @@ A simulation of evolution by natural selection within groups and between them.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ### Prerequisites
 
-What things you need to install the software
+What you need to use the application
 
 ```
 Python 3.8.0
 ```
 
-### Installing
-
-A step by step series of examples that tell you how to get a development env running
+### Running
 
 Run the main app with python
 
@@ -28,11 +26,11 @@ You will be asked to enter a few settings, but there are default values if you d
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on the process for submitting pull requests.
 
 ## Authors
 
-* **Emanuel Neves** - *Initial work* - [emanueln](https://github.com/emanueln)
+* **Emanuel Neves** - *Owner* - [emanueln](https://github.com/emanueln)
 
 See also the list of [contributors](https://github.com/emanueln/life-sim/graphs/contributors) who participated in this project.
 
