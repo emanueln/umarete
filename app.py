@@ -26,17 +26,19 @@ def random_sim():
 
 # Spend time
 def spend_a_month(tribe, biome):
-    food_difficulty = food.total_food_desired(tribe.sims) / biome.capacity * 100
+    food_difficulty = food.total_food_desired(tribe) / biome.capacity * 100
     food.food_stage(tribe, food_difficulty)
     death.handle_deaths(tribe)
-    reproduction.reproduction_stage(tribe)
-    mating.mating_stage(tribe.sims)
-    aging.age_sims(tribe.sims)
-    death.handle_deaths(tribe)
-    internal_politics.politics_stage(tribe)
+    # reproduction.reproduction_stage(tribe)
+    # mating.mating_stage(tribe.sims)
+    # aging.age_sims(tribe.sims)
+    # death.handle_deaths(tribe)
+    # internal_politics.politics_stage(tribe)
     
 def spend_a_year(tribe, biome, date):
     for _ in range(12):
+        if tribe.live_sim_count() == 0:
+            return date
         spend_a_month(tribe, biome)
         date += 1
     return date
@@ -65,8 +67,17 @@ tundra = classes.Biome(capacity=capacity)
 sims = []
 for _ in range(starting_population):
     sims.append(random_sim())
+
 # Assign them to a tribe
-tribe = classes.Tribe(name="First Tribe", sims = sims)
+families = []
+for sim in sims:
+    name = names.random_last_name()
+    if sim.genes.female:
+        families.append(classes.Family(name=name, woman=sim))
+    else:
+        families.append(classes.Family(name=name, man=sim))
+
+tribe = classes.Tribe(name="First Tribe", families = families)
 
 # Run simulation for x years
 for _ in range(sim_length):
@@ -74,8 +85,8 @@ for _ in range(sim_length):
 
 # Give status report at the end
 reports.date_and_population(date, tribe)
-reports.average_age(tribe.sims)
-reports.genetic_analysis(tribe.sims)
-if len(tribe.dead_sims) > 0:    
-    reports.life_expectancy(tribe.dead_sims)
-    reports.causes_of_death(tribe.dead_sims)
+reports.average_age(tribe)
+reports.genetic_analysis(tribe)
+if tribe.dead_sim_count() > 0:
+    reports.life_expectancy(tribe.dead_sims())
+    reports.causes_of_death(tribe.dead_sims())

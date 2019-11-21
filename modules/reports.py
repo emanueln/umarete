@@ -31,23 +31,23 @@ def causes_of_death(dead_sims):
 def date_and_population(date, tribe):
     print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX")
     print("%d years have passed." %  (date // 12))
-    print("There are %d sims still alive." % len(tribe.sims))
-    print("There are %d dead sims." % len(tribe.dead_sims))
+    print("There are %d sims still alive." % tribe.live_sim_count())
+    print("There are %d dead sims." % tribe.dead_sim_count())
 
-def average_age(sims):
+def average_age(tribe):
     print("--------AVERAGE AGE----------")
     total_age = 0
-    if len(sims) == 0:
+    if tribe.live_sim_count() == 0:
         print("Everyone is dead. No average age.")
     else:
-        for sim in sims:
-            total_age += sim.age
-        print("Average age of living sims: %.1f" % (total_age / len(sims) / 12))
+        for sim in tribe.live_sims():
+            total_age += sim.age - 9
+        print("Average age of living sims: %.1f" % (total_age / tribe.live_sim_count() / 12))
 
 
-def genetic_analysis(sims):
-    male_sims = list(filter(lambda x: not x.genes.female, sims))
-    female_sims = list(filter(lambda x: x.genes.female, sims))
+def genetic_analysis(tribe):
+    male_sims = list(filter(lambda x: not x.genes.female, tribe.live_sims()))
+    female_sims = list(filter(lambda x: x.genes.female, tribe.live_sims()))
     if len(female_sims) == 0 or len(male_sims) == 0:
         print("Everyone is dead. Genetics analysis not performed.")
     else:
@@ -70,13 +70,13 @@ def genetic_analysis(sims):
             print("Average %s: %d" % (gene, (value // len(female_sims))))
 
 
-def list_of_sims(sims):
+def list_of_sims(tribe):
     print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX")
     print("End of Simulation Status Log")
-    for sim in sims:
+    for sim in tribe.live_sims():
         print("------------------------------")
         print("%s is still alive and is %s years old." % (sim.name, sim.age // 12))
         if sim.partner_id > 0:
-            print("Their partner is %s" % next(filter(lambda x: x.id == sim.partner_id, sims), None).name)
+            print("Their partner is %s" % next(filter(lambda x: x.id == sim.partner_id, tribe.live_sims()), None).name)
         else:
             print("So lonely...")

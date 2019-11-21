@@ -71,14 +71,77 @@ class Sim:
         self.alive = False
         self.death_cause = cause
 
-class Tribe:
-    def __init__(self, name, sims):
+class Family:
+    def __init__(self, name, man=None, woman=None):
         self.id = random_id()
         self.name = name
-        self.sims = sims
-        self.dead_sims = []
+        self.man = man
+        self.woman = woman
+        self.children = []
+        self.food_store = 0.0
+    
+    def member_count(self):
+        return len(self.members())
+
+    def members(self):
+        members = []
+        if self.man is not None:
+            members.append(self.man)
+        if self.woman is not None:
+            members.append(self.woman)
+        members += self.children
+        return members
+    
+    def live_members(self):
+        live_sims = []
+        for sim in self.members():
+            if sim.alive:
+                live_sims.append(sim)
+        return live_sims
+    
+    def live_member_count(self):
+        return len(self.live_members())
+
+    def set_members(self, sims):
+        self.children = []
+        for sim in sims:
+            if sim.age >= 201:
+                if sim.genes.female:
+                    self.woman = sim
+                else:
+                    self.man = sim
+            else:
+                self.children.append(sim)
+        
+class Tribe:
+    def __init__(self, name, families):
+        self.id = random_id()
+        self.name = name
+        self.families = families
         self.food_store = 0.0
         self.chief_id = 0
+
+    def live_sim_count(self):
+        return len(self.live_sims())
+
+    def dead_sims(self):
+        return list(filter(lambda x: not x.alive, self.sims()))
+
+    def dead_sim_count(self):
+        return len(self.dead_sims())
+
+    def sims(self):
+        all_sims = []
+        for family in self.families:
+            all_sims += family.members()
+        return all_sims
+
+    def live_sims(self):
+        all_sims = []
+        for family in self.families:
+            all_sims += family.live_members()
+        return all_sims
+
     
 class Biome:
   def __init__(self, capacity):

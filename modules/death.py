@@ -1,25 +1,22 @@
 # Death module
 
 def handle_deaths(tribe):
-    live_sims = list(filter(lambda sim: sim.alive, tribe.sims))
-    new_dead = list(filter(lambda sim: not sim.alive, tribe.sims))
-    tribe.dead_sims += new_dead
-    new_sims = []
+    new_dead = list(filter(lambda sim: not sim.alive, tribe.live_sims()))
     for dead in new_dead:
         if dead.id == tribe.chief_id:
             tribe.chief_id = 0
-    for sim in live_sims:
-        if sim.partner_id > 0 and not next(filter(lambda x: x.id == sim.partner_id, tribe.sims), None).alive:
-            #print("%s's partner died. They are grieving." % sim.name)
-            sim.grieving = True
-            sim.partner_id = 0
-        elif sim.grieving:
-            #print("%s is no longer grieving. They will start looking for a partner." % sim.name)
-            sim.grieving = False
-        elif sim.age < 9:
-            mother =  sim.mother(tribe.sims)
-            if not mother.alive:
-                sim.kill(2)
-        new_sims.append(sim)
-    tribe.sims = new_sims
-    return tribe
+    for family in tribe.families:
+        handle_family_deaths(family)
+
+def handle_family_deaths(family):
+    if family.man is not None and family.woman is not None:
+        if not family.man.alive and family.woman.alive:
+            family.woman.grieving = True
+            family.woman.partner_id = 0
+        elif not family.woman.alive and family.man.alive:
+            family.man.grieving = True
+            family.man.partner_id = 0
+    if family.woman is not None and not family.woman.alive:
+        children_under_9 = list(filter(lambda x: x.age < 9, family.children))
+        for child in children_under_9:
+            child.kill(2)
