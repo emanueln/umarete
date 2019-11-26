@@ -1,6 +1,6 @@
-# life-sim
+# umarete
 
-A simulation of evolution by natural selection within groups and between them.
+A simulation of life, adaptation and reproduction.
 
 ## Getting Started
 
